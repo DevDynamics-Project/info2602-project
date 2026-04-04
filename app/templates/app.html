@@ -4,27 +4,29 @@
 <script src="{{ url_for('static', path='js/app.js')}}"></script>
 {% endblock %}
 
-
 {% block subpage_content %}
 
-    <div class="container" id="content">
-        <div class="row">
-            <p>
-                This is table is rendered on the Client. JavaScript code requests the data from <a href="/api/users">/api/users</a> and writes it to this page.
-            </p>
+<div class="container mt-4" id="content">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <button class="btn btn-dark mb-2">Logout</button><br>
+            <button class="btn btn-dark">Search</button>
         </div>
-        <div class="row">
-            <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Id</th><th>Username</th>
-                  </tr>
-                </thead>
-                <tbody id="result">
-                
-                <tbody>
-            </table>
+
+        <h1 class="text-center flex-grow-1">Workouts</h1>
+
+        <div class="text-end">
+            <a href="/routine" class="btn btn-dark">View/Edit Routine</a>
         </div>
     </div>
+
+    <!-- Workout Cards -->
+    <div class="row g-4" id="result">
+        <!-- Cards will be injected here by JS -->
+    </div>
+
+</div>
 
 {% endblock %}
