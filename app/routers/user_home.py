@@ -19,3 +19,17 @@ async def user_home_view(
             "user": user
         }
     )
+
+@router.get("/MyRoutine", response_class=HTMLResponse)
+async def routine_view(
+    request: Request,
+    user: AuthDep,
+    db: SessionDep
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="MyRoutine.html",
+        context={
+            "user": user
+        }
+    )

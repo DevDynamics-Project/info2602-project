@@ -7,6 +7,7 @@ from app.repositories.user import UserRepository
 from app.utilities.flash import flash
 from app.config import get_settings
 
+
 # View route responsible for UI
 @router.get("/logout")
 async def logout(request: Request):
