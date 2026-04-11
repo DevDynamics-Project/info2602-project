@@ -1,5 +1,5 @@
 async function getWorkoutData(){
-    const response = await fetch('/api/workouts'); // future endpoint
+    const response = await fetch('/api/workouts');
     return response.json();
 }
 
@@ -9,33 +9,37 @@ function loadWorkouts(workouts){
     container.innerHTML = workouts.map(workout => `
         <div class="col-md-6 col-lg-4">
             <div class="card text-center p-3">
-                <div style="height:120px; background:black;" class="mb-3"></div>
+
+                <div style="height:120px;" class="mb-3"></div>
+
                 <h5>${workout.name}</h5>
-                <p>${workout.muscle} | ${workout.difficulty}</p>
+                <p>${workout.muscle} • ${workout.difficulty}</p>
+
                 <button class="btn btn-dark" onclick="addToRoutine(${workout.id})">
-                    Add to Routine
+                    Add
                 </button>
+
             </div>
         </div>
     `).join("");
 }
 
 function addToRoutine(id){
-    console.log("Add workout:", id);
-
-    // future API call example:
-    /*
-    fetch('/api/routine', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ workout_id: id })
-    });
-    */
+    alert("Added to routine!");
 }
 
 async function main(){
     const workouts = await getWorkoutData();
     loadWorkouts(workouts);
+
+    // search
+    document.getElementById("search").addEventListener("input", (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = workouts.filter(w =>
+            w.name.toLowerCase().includes(term)
+        );
+        loadWorkouts(filtered);
+    });
 }
 
 main();

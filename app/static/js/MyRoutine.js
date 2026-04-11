@@ -10,10 +10,10 @@ function loadRoutine(workouts){
         <div class="col-md-6 col-lg-4">
             <div class="card text-center p-3">
 
-                <div style="height:120px; background:black;" class="mb-3"></div>
+                <div style="height:120px;" class="mb-3"></div>
 
                 <h5>${workout.name}</h5>
-                <p>${workout.muscle} | ${workout.difficulty}</p>
+                <p>${workout.muscle} • ${workout.difficulty}</p>
 
                 <button class="btn btn-dark" onclick="deleteWorkout(${workout.id})">
                     Delete
@@ -24,18 +24,8 @@ function loadRoutine(workouts){
     `).join("");
 }
 
-async function deleteWorkout(id){
-    console.log("Delete workout:", id);
-
-    // future API call
-    /*
-    await fetch(`/api/routine/${id}`, {
-        method: 'DELETE'
-    });
-    */
-
-    // refresh after delete
-    main();
+function deleteWorkout(id){
+    alert("Removed from routine!");
 }
 
 async function main(){
