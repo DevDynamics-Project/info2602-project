@@ -7,21 +7,49 @@ from app.models.user import User
 from app.dependencies.session import SessionDep
 from app.repositories.user import UserRepository
 
-async def get_current_user(request: Request, db:SessionDep):
+# async def get_current_user(request: Request, db:SessionDep):
 
-    # ✅ READ COOKIE INSTEAD OF HEADER
+#     # ✅ READ COOKIE INSTEAD OF HEADER
+#     token = request.cookies.get("access_token")
+
+#     if not token:
+#         raise HTTPException(status_code=401, detail="No token found")
+
+#     # ⚠️ TEMP DEBUG (you can remove later)
+#     print("TOKEN:", token)
+
+#     # If you're NOT using JWT, just return user directly:
+#     user = token   # or fetch from DB if needed
+
+#     return user
+async def get_current_user(request: Request, db: SessionDep):
     token = request.cookies.get("access_token")
 
     if not token:
         raise HTTPException(status_code=401, detail="No token found")
 
-    # ⚠️ TEMP DEBUG (you can remove later)
-    print("TOKEN:", token)
+    try:
+        payload = jwt.decode(
+            token,
+            get_settings().secret_key,
+            algorithms=[get_settings().jwt_algorithm]
+        )
 
-    # If you're NOT using JWT, just return user directly:
-    user = token   # or fetch from DB if needed
+        user_id = payload.get("sub")
 
-    return user
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Invalid token")
+
+        user = db.get(User, int(user_id))
+
+        if not user:
+            raise HTTPException(status_code=401, detail="User not found")
+
+        return user
+
+    except InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    #=======================================================================
 
 async def is_logged_in(request: Request, db:SessionDep):
     try:
