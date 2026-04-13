@@ -1,7 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
-from models.routine import Routine
-from models.workout_routine import RoutineWorkout
+from app.models.workout_routine import RoutineWorkout
 
 
 class WorkoutBase(SQLModel):
@@ -15,4 +14,4 @@ class WorkoutBase(SQLModel):
 class Workout(WorkoutBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
 
-    routines: list['Routine'] = Relationship(back_populates=("workouts"), link_model=RoutineWorkout)
+    routines: list["Routine"] = Relationship(back_populates=("workouts"), link_model=RoutineWorkout)

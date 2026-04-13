@@ -1,4 +1,5 @@
 from sqlmodel import Session, select, func
+from app.dependencies.session import SessionDep
 from app.models.user import UserBase, User
 from typing import Optional, Tuple
 from app.utilities.pagination import Pagination
@@ -8,7 +9,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class UserRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db:SessionDep):
         self.db = db
 
     def create(self, user_data: UserBase) -> Optional[User]:

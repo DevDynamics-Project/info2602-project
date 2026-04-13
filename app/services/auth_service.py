@@ -15,6 +15,9 @@ class AuthService:
         return access_token
 
     def register_user(self, username: str, email: str, password: str):
+        #al
+        from app.models.user import UserBase
+        
         new_user = RegularUserCreate(
             username=username, 
             email=email, 
