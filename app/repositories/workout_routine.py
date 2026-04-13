@@ -3,7 +3,7 @@ from app.dependencies.session import SessionDep
 from app.models.workout_routine import RoutineWorkoutBase, RoutineWorkout
 from typing import Optional, Tuple
 from app.utilities.pagination import Pagination
-from app.schemas.routine_workout import RoutineWorkoutUpdate
+from app.schemas.workout_routine import RoutineWorkoutUpdate
 import logging
 
 logger = logging.getLogger(__name__)
@@ -42,7 +42,7 @@ class RoutineWorkoutRepository:
     def get_by_id(self, RoutineWorkout_id: int) -> Optional[RoutineWorkout]:
         return self.db.get(RoutineWorkout, RoutineWorkout_id)
 
-    def get_all_RoutineWorkouts(self) -> list[Routine]:
+    def get_all_RoutineWorkouts(self) -> list[RoutineWorkout]:
         return self.db.exec(select(RoutineWorkout)).all()
 
     def update_RoutineWorkout(self, RoutineWorkout_id:int, RoutineWorkout_data: RoutineWorkoutUpdate)->RoutineWorkout:
