@@ -9,7 +9,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
 
     background: linear-gradient(270deg, #0f4c75, #3282b8, #00b4d8);
     background-size: 600% 600%;
@@ -149,4 +149,38 @@ body {
     position: relative;
     z-index: 2;
     color: white;
+}
+
+/* =========================
+   HEADER LAYOUT (FINAL)
+========================= */
+.navbar-custom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 15px 30px;
+
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+
+    position: relative;
+    z-index: 2;
+}
+
+/* CENTER TITLE */
+.nav-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    font-weight: 600;
+    color: white;
+}
+
+/* LEFT + RIGHT BUTTON GROUPS */
+.nav-left,
+.nav-right {
+    display: flex;
+    gap: 10px;
 }
