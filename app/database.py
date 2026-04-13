@@ -2,7 +2,7 @@ import logging
 from sqlmodel import SQLModel, Session, create_engine
 from app.config import get_settings
 from contextlib import contextmanager
-from app.cli import seed_workouts
+
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,6 @@ engine = create_engine(
 # =========================
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
-    seed_workouts()
 
 def drop_all():
     SQLModel.metadata.drop_all(bind=engine)

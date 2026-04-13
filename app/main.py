@@ -6,12 +6,14 @@ from app.routers import templates, static_files, router, api_router
 from app.config import get_settings
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from app.db.init_db import init_db
 
  
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     from app.database import create_db_and_tables
     create_db_and_tables()
+    init_db()
     yield
 
 app = FastAPI(middleware=[
