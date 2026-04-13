@@ -1,19 +1,29 @@
 {% extends "authenticated-base.html" %}
 
 {% block external_js %}
-<script src="{{ url_for('static', path='js/app.js')}}"></script>
+<script src="/static/js/app.js"></script>
 {% endblock %}
 
+<!-- HEADER -->
+{% block header_title %}Workouts{% endblock %}
+
+{% block header_left %}
+<a href="/routine" class="btn btn-dark">My Routines</a>
+{% endblock %}
+
+{% block header_right %}
+<a href="/logout" class="btn btn-dark">Logout</a>
+{% endblock %}
+
+<!-- CONTENT -->
 {% block subpage_content %}
 
 <div class="container mt-4">
 
-    <h1 class="text-center mb-4">Workouts</h1>
+    <h1 class="text-center mb-4"></h1>
 
-    <!-- Search -->
     <input id="search" class="form-control mb-4" placeholder="Search workouts...">
 
-    <!-- Cards -->
     <div class="row g-4" id="result"></div>
 
 </div>

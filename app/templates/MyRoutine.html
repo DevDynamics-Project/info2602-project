@@ -1,14 +1,28 @@
 {% extends "authenticated-base.html" %}
 
 {% block external_js %}
-<script src="{{ url_for('static', path='js/routine.js')}}"></script>
+<script src="/static/js/routine.js"></script>
 {% endblock %}
 
+<!-- HEADER -->
+{% block header_title %}My Routines{% endblock %}
+
+{% block header_left %}
+<a href="/app" class="btn btn-dark">Home</a>
+{% endblock %}
+
+{% block header_right %}
+<a href="/logout" class="btn btn-dark">Logout</a>
+{% endblock %}
+
+<!-- CONTENT -->
 {% block subpage_content %}
 
 <div class="container mt-4">
 
-    <h1 class="text-center mb-4">My Routine</h1>
+    <h1 class="text-center mb-4"></h1>
+
+    <input id="search" class="form-control mb-4" placeholder="Search routines...">
 
     <div class="row g-4" id="routine-container"></div>
 
