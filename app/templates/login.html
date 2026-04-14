@@ -1,66 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
+{% extends "base.html" %}
+{% block title %}Login — My Workout Mixer{% endblock %}
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
-</head>
-
+{% block content %}
 <body class="auth-body">
-    <!-- Background Images -->
-<div class="bg-images">
-    <img src="{{ url_for('static', path='img/fit1.jpg') }}">
-    <img src="{{ url_for('static', path='img/fit2.jpg') }}">
-    <img src="{{ url_for('static', path='img/fit3.jpg') }}">
-</div>
+  <div class="bg-images">
+    <img src="/static/img/fit1.jpg" alt="">
+    <img src="/static/img/fit2.jpg" alt="">
+    <img src="/static/img/fit3.jpg" alt="">
+  </div>
+  <div class="vertical-text vertical-left">DISCIPLINE OVER MOTIVATION</div>
+  <div class="vertical-text vertical-right">DISCIPLINE OVER MOTIVATION</div>
 
-<!-- Vertical Text -->
-<div class="vertical-text vertical-left">
-    DISCIPLINE OVER MOTIVATION
-</div>
+  <div class="auth-header">
+    <div class="circle"></div>
+    <h1>My Workout Mixer</h1>
+    <div class="circle"></div>
+  </div>
+  <hr class="auth-hr">
 
-<div class="vertical-text vertical-right">
-    DISCIPLINE OVER MOTIVATION
-</div>
-    
-    <!-- HEADER -->
-    <div class="auth-header">
-        <div class="circle"></div>
-        <h1>My Workout Mixer</h1>
-        <div class="circle"></div>
+  <div class="auth-wrapper">
+    <div class="auth-container">
+      <h2>Login</h2>
+      <form method="post" action="/login">
+        <label>Username</label>
+        <input type="text" name="username" required autocomplete="username">
+        <label>Password</label>
+        <input type="password" name="password" required autocomplete="current-password">
+        <button type="submit">Login</button>
+      </form>
+      <p>No account? No problem!</p>
+      <a href="/register" class="btn-auth">Register</a>
     </div>
-
-    <hr>
-
-    <!-- CENTERED FORM -->
-    <div class="auth-wrapper">
-
-        <div class="auth-container">
-            <h2>Login</h2>
-
-            <form method="post" action="/login">
-
-                <label>Username</label>
-                <input type="text" name="username" required>
-
-                <label>Password</label>
-                <input type="password" name="password" required>
-
-                <button type="submit">Login</button>
-
-            </form>
-
-            <p>No account No problem!</p>
-
-            <a href="/register">
-                <button>Register</button>
-            </a>
-
-        </div>
-
-    </div>
-
+  </div>
 </body>
-</html>
+{% endblock %}

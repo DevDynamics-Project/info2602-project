@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Background Images (matches auth pages) -->
+<div class="bg-images app-bg">
+  <img src="/static/img/fit1.jpg" alt="">
+  <img src="/static/img/fit2.jpg" alt="">
+  <img src="/static/img/fit3.jpg" alt="">
+</div>
+
+<div class="vertical-text vertical-left">DISCIPLINE OVER MOTIVATION</div>
+<div class="vertical-text vertical-right">DISCIPLINE OVER MOTIVATION</div>
+
+<!-- Navbar -->
+<nav class="app-nav">
+  <span class="brand">My Workout Mixer</span>
+  <div class="nav-links">
+    <a href="/app" class="{{ 'active' if request.url.path == '/app' else '' }}">Workouts</a>
+    <a href="/routine" class="{{ 'active' if request.url.path == '/routine' else '' }}">My Routine</a>
+  </div>
+  <div class="nav-right">
+    <span class="username">{{ user.username }}</span>
+    <a href="/logout" class="btn-logout">Logout</a>
+  </div>
+</nav>
+
+{% set messages = get_flashed_messages(request) %}
+{% if messages %}
+<div class="flash-wrap">
+  {% for msg in messages %}
+  <div class="flash {{ msg.type }}">{{ msg.message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% block page_content %}{% endblock %}
+{% endblock %}

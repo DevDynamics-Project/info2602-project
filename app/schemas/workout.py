@@ -1,20 +1,18 @@
-from app.models.workout import WorkoutBase
 from sqlmodel import SQLModel
-from typing import Optional
 
 
-class WorkoutUpdate(SQLModel):
-    difficulty: Optional[str]
-    duration: Optional[str]
-    description: Optional[str]
+class WorkoutCreate(SQLModel):
+    name: str
+    description: str
+    duration: int
+    difficulty: str
+    muscle_group: str
 
-class WorkoutCreate(WorkoutBase):
-    difficulty:str = "moderate"
 
 class WorkoutResponse(SQLModel):
     id: int
-    name:str
+    name: str
     description: str
+    duration: int
     difficulty: str
-    duration: str
-    
+    muscle_group: str
