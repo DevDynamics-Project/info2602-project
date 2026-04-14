@@ -1,31 +1,32 @@
-{% extends "authenticated-base.html" %}
+{% extends "authenticated_base.html" %}
+{% block title %}Workouts — My Workout Mixer{% endblock %}
 
-{% block external_js %}
-<script src="/static/js/app.js"></script>
+{% block extra_js %}
+<script src="/static/js/app.js" defer></script>
 {% endblock %}
 
-<!-- HEADER -->
-{% block header_title %}Workouts{% endblock %}
+{% block page_content %}
+<div class="page-wrap">
+  <h1 class="page-title">WORKOUTS</h1>
+  <p class="page-subtitle">Browse the library and add exercises to your routines</p>
 
-{% block header_left %}
-<a href="/routine" class="btn btn-dark">My Routines</a>
-{% endblock %}
+  <input
+    type="text"
+    id="search"
+    class="search-bar"
+    placeholder="Search by name, muscle group or difficulty…"
+    oninput="handleSearch()"
+  >
 
-{% block header_right %}
-<a href="/logout" class="btn btn-dark">Logout</a>
-{% endblock %}
-
-<!-- CONTENT -->
-{% block subpage_content %}
-
-<div class="container mt-4">
-
-    <h1 class="text-center mb-4"></h1>
-
-    <input id="search" class="form-control mb-4" placeholder="Search workouts...">
-
-    <div class="row g-4" id="result"></div>
-
+  <div class="workout-grid" id="workout-grid">
+    {% for i in range(8) %}
+    <div class="w-card">
+      <div class="skel" style="height:18px;width:70%;margin-bottom:6px"></div>
+      <div class="skel" style="height:12px;width:90%;margin-bottom:4px"></div>
+      <div class="skel" style="height:12px;width:60%;margin-bottom:10px"></div>
+      <div class="skel" style="height:32px;margin-top:6px"></div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
-
 {% endblock %}

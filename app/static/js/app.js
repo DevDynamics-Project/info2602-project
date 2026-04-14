@@ -1,49 +1,118 @@
-async function getWorkoutData(){
-    const response = await fetch('/api/workouts', {
-        method: "GET",
-        credentials: "include"
+let allWorkouts = [];
+let allRoutines = [];
+
+async function fetchJSON(url, opts = {}) {
+  const res = await fetch(url, { credentials: 'include', ...opts });
+  if (!res.ok) {
+    if (res.status === 401) { window.location.href = '/login'; return null; }
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+function difficultyBadge(d) {
+  const cls = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' };
+  return `<span class="badge ${cls[d] || 'badge-medium'}">${d}</span>`;
+}
+
+function renderRoutineOptions() {
+  if (!allRoutines.length) return `<option value="">No routines yet</option>`;
+  return allRoutines
+    .map(r => `<option value="${r.id}">${r.name}</option>`)
+    .join('');
+}
+
+function renderWorkoutGrid(workouts) {
+  const grid = document.getElementById('workout-grid');
+
+  if (!workouts.length) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="big">NO RESULTS</div>
+        <div>Try a different search term</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = workouts.map(w => `
+    <div class="w-card" id="wcard-${w.id}">
+      <div class="w-card-header">
+        <span class="w-card-name">${escHtml(w.name)}</span>
+        ${difficultyBadge(w.difficulty)}
+      </div>
+      <div class="w-card-desc">${escHtml(w.description)}</div>
+      <div class="w-card-meta">
+        <span class="badge badge-muscle">${escHtml(w.muscle_group)}</span>
+        <span class="meta-tag">${w.duration} min</span>
+      </div>
+      <div class="w-card-actions">
+        <select id="sel-${w.id}">
+          <option value="">Add to routine…</option>
+          ${renderRoutineOptions()}
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="addToRoutine(${w.id})">Add</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function handleSearch() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  if (!q) { renderWorkoutGrid(allWorkouts); return; }
+  const filtered = allWorkouts.filter(w =>
+    w.name.toLowerCase().includes(q) ||
+    w.muscle_group.toLowerCase().includes(q) ||
+    w.difficulty.toLowerCase().includes(q) ||
+    w.description.toLowerCase().includes(q)
+  );
+  renderWorkoutGrid(filtered);
+}
+
+async function addToRoutine(workoutId) {
+  const sel = document.getElementById('sel-' + workoutId);
+  const routineId = parseInt(sel.value);
+  if (!routineId) { showToast('Select a routine first', true); return; }
+
+  const routine = allRoutines.find(r => r.id === routineId);
+  const workout = allWorkouts.find(w => w.id === workoutId);
+
+  try {
+    const result = await fetchJSON(`/api/routines/${routineId}/workouts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ workout_id: workoutId, sets: 3, reps: 10, order: 0 })
     });
-
-    return response.json();
+    if (result) {
+      showToast(`"${workout.name}" added to "${routine.name}"`);
+      sel.value = '';
+      allRoutines = await fetchJSON('/api/routines') || allRoutines;
+    }
+  } catch (e) {
+    showToast(e.message || 'Already in routine', true);
+  }
 }
 
-function loadWorkouts(workouts){
-    const container = document.querySelector('#result');
-
-    container.innerHTML = workouts.map(workout => `
-        <div class="col-md-6 col-lg-4">
-            <div class="card text-center p-3">
-
-                <div style="height:120px;" class="mb-3"></div>
-
-                <h5>${workout.name}</h5>
-                <p>${workout.muscle} • ${workout.difficulty}</p>
-
-                <button class="btn btn-dark" onclick="addToRoutine(${workout.id})">
-                    Add
-                </button>
-
-            </div>
-        </div>
-    `).join("");
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
-function addToRoutine(id){
-    alert("Added to routine!");
-}
-
-async function main(){
-    const workouts = await getWorkoutData();
-    loadWorkouts(workouts);
-
-    // search
-    document.getElementById("search").addEventListener("input", (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = workouts.filter(w =>
-            w.name.toLowerCase().includes(term)
-        );
-        loadWorkouts(filtered);
-    });
+async function main() {
+  try {
+    [allWorkouts, allRoutines] = await Promise.all([
+      fetchJSON('/api/workouts'),
+      fetchJSON('/api/routines')
+    ]);
+    allWorkouts = allWorkouts || [];
+    allRoutines = allRoutines || [];
+    renderWorkoutGrid(allWorkouts);
+  } catch (e) {
+    document.getElementById('workout-grid').innerHTML =
+      `<div class="empty-state" style="grid-column:1/-1"><div class="big">ERROR</div><div>${e.message}</div></div>`;
+  }
 }
 
 main();

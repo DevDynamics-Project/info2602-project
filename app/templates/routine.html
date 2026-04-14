@@ -1,0 +1,33 @@
+{% extends "authenticated_base.html" %}
+{% block title %}My Routine — My Workout Mixer{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/routine.js" defer></script>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-wrap">
+  <h1 class="page-title">MY ROUTINE</h1>
+  <p class="page-subtitle">Build, edit and remix your workout plans</p>
+
+  <!-- Create form -->
+  <div class="routine-create-box">
+    <h3>Create New Routine</h3>
+    <div class="form-row">
+      <input type="text" id="routine-name" class="form-input" placeholder="Routine name…" style="flex:1;min-width:180px">
+      <input type="text" id="routine-desc" class="form-input" placeholder="Description (optional)…" style="flex:2;min-width:220px">
+      <button class="btn btn-primary" onclick="createRoutine()">+ Create</button>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-grid" id="stats-grid" style="margin-bottom:22px"></div>
+
+  <!-- Routine list -->
+  <div id="routine-list">
+    <div class="empty-state">
+      <div class="big">LOADING…</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -9,31 +9,23 @@ from . import router, templates
 
 @router.get("/register", response_class=HTMLResponse)
 async def register_view(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name="register.html",
-    )
+    return templates.TemplateResponse(request=request, name="register.html")
 
 
-@router.post('/register', response_class=HTMLResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/register", response_class=HTMLResponse, status_code=status.HTTP_201_CREATED)
 def signup_user(
     request: Request,
     db: SessionDep,
     username: str = Form(),
     email: str = Form(),
     password: str = Form(),
-    user_repo = UserRepository,
-    auth_service = AuthService
+    confirm_password: str = Form(default=""),
 ):
-
-    user_repo = UserRepository(db)
-    auth_service = AuthService(user_repo)
-
+    auth_service = AuthService(UserRepository(db))
     try:
         auth_service.register_user(username, email, password)
-        flash(request, "Registration completed! Sign in now!")
-        return RedirectResponse(url=request.url_for("login_view"), status_code=status.HTTP_303_SEE_OTHER)
-
+        flash(request, "Registration completed! Sign in now.")
+        return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
     except Exception:
         flash(request, "Username or email already exists", "danger")
-        return RedirectResponse(url=request.url_for("register_view"), status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(url="/register", status_code=status.HTTP_303_SEE_OTHER)

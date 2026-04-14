@@ -9,38 +9,21 @@ from app.utilities.flash import flash
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_view(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name="login.html",
-    )
+    return templates.TemplateResponse(request=request, name="login.html")
 
 
 @router.post("/login", response_class=HTMLResponse)
-async def login_action_ajax(
+async def login_action(
     request: Request,
     db: SessionDep,
     username: str = Form(),
     password: str = Form(),
-    user_repo = UserRepository,
-    auth_service = AuthService,
 ):
-    user_repo = UserRepository(db)
-    auth_service = AuthService(user_repo)
-
+    auth_service = AuthService(UserRepository(db))
     access_token = auth_service.authenticate_user(username, password)
-
     if not access_token:
         flash(request, "Incorrect username or password", "danger")
-        return RedirectResponse(url=request.url_for("login_view"), status_code=status.HTTP_303_SEE_OTHER)
-
-    response = RedirectResponse(url=request.url_for("index_view"), status_code=status.HTTP_303_SEE_OTHER)
-
-    response.set_cookie(
-        key="access_token",
-        value=access_token,  # ✅ FIXED
-        httponly=True,
-        samesite="lax",
-        secure=False
-    )
-
+        return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
+    response = RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    response.set_cookie(key="access_token", value=access_token, httponly=True, samesite="lax", secure=False)
     return response

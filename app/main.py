@@ -6,21 +6,31 @@ from app.routers import templates, static_files, router, api_router
 from app.config import get_settings
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from app.db.init_db import init_db
 
- 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    from app.database import create_db_and_tables
+    from app.database import create_db_and_tables, get_db
+    from app.utilities.seeder import seed_workouts
     create_db_and_tables()
-    init_db()
+    db_gen = get_db()
+    db = next(db_gen)
+    try:
+        seed_workouts(db)
+    finally:
+        try:
+            next(db_gen)
+        except StopIteration:
+            pass
     yield
 
-app = FastAPI(middleware=[
-    Middleware(SessionMiddleware, secret_key=get_settings().secret_key)
-],
+
+app = FastAPI(
+    middleware=[
+        Middleware(SessionMiddleware, secret_key=get_settings().secret_key)
+    ],
     lifespan=lifespan
-) 
+)
 
 app.include_router(router)
 app.include_router(api_router)
@@ -32,13 +42,18 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-) 
+)
+
+
 @app.exception_handler(status.HTTP_401_UNAUTHORIZED)
 async def unauthorized_redirect_handler(request: Request, exc: Exception):
-    return templates.TemplateResponse(
-        request=request, 
-        name="401.html",
-    )
+    return templates.TemplateResponse(request=request, name="401.html")
+
 
 if __name__ == "__main__":
-    uvicorn.run("app.main:app", host=get_settings().app_host, port=get_settings().app_port, reload=get_settings().env.lower()!="production")
+    uvicorn.run(
+        "app.main:app",
+        host=get_settings().app_host,
+        port=get_settings().app_port,
+        reload=get_settings().env.lower() != "production"
+    )
